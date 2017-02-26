@@ -13,4 +13,9 @@ class Pipeline extends Model
     {
         return $this->hasMany('App\Node');
     }
+
+    public function connections()
+    {
+        return $this->hasMany('App\Connection');
+    }
 }

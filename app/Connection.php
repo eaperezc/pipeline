@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Connection extends Model
 {
-    protected $fillable = [ 'from_node_id', 'to_node_id' ];
+    protected $fillable = [ 'from_node_id', 'to_node_id', 'pipeline_id' ];
 }

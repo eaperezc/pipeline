@@ -18,6 +18,7 @@ class PipelinesTableSeeder extends Seeder
         DB::table('nodes')->insert([
             'name' => str_random(10),
             'type' => 'empty',
+            'hierarchy_level' => 1,
             'pipeline_id' => $id
         ]);
     }

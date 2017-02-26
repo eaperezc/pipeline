@@ -44,12 +44,17 @@ class NodeController extends Controller
 
         $node = DB::transaction(function () use ($request) {
 
+            $parent = Node::findOrFail($request->input('from_node_id'));
+
             $node = new Node($request->all());
+            $node->hierarchy_level = $parent->hierarchy_level + 1;
+
             $node->save();
 
             $connection = new Connection([
-                'from_node_id' => $request->input('from_node_id'),
-                'to_node_id' => $node->id
+                'from_node_id' => $parent->id,
+                'to_node_id' => $node->id,
+                'pipeline_id' => $node->pipeline_id
             ]);
 
             $connection->save();
@@ -58,7 +63,7 @@ class NodeController extends Controller
 
         });
 
-        return $node;
+        return redirect('/');
     }
 
     /**

@@ -22,6 +22,9 @@ class CreateConnectionsTable extends Migration
             $table->integer('to_node_id')->unsigned();
             $table->foreign('to_node_id')->references('id')->on('nodes');
 
+            $table->integer('pipeline_id')->unsigned();
+            $table->foreign('pipeline_id')->references('id')->on('pipelines');
+
             $table->timestamps();
         });
     }

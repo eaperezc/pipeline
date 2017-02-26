@@ -10,6 +10,13 @@
 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
 
+        <style type="text/css">
+            *:focus {
+                outline:none !important;
+            }
+        </style>
+
+
     </head>
     <body>
 
@@ -27,13 +34,20 @@
 
     <div id="mynetwork" style="height: 400px"></div>
 
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.js"></script>
 
 
 <script type="text/javascript">
+
+
+$( document ).ready(function() {
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
     // create an array with nodes
-    var nodes = new vis.DataSet([
+    /*var nodes = new vis.DataSet([
         {id: 1, label: 'Start', level: 1, image: '/images/sign-check.png' },
         {id: 2, label: 'Prepare Data', level: 2 },
         {id: 3, label: 'Cleanup', level: 2, image: '/images/sign-check.png' },
@@ -48,31 +62,30 @@
         {from: 2, to: 4 },
         {from: 2, to: 5 },
         {from: 3, to: 4 }
-    ]);
+    ]);*/
 
-    // create a network
-    var container = document.getElementById('mynetwork');
 
     // provide the data in the vis format
-    var data = {
+    /*var data = {
         nodes: nodes,
         edges: edges
-    };
+    };*/
+
     var options = {
-        'nodes': {
+        nodes: {
             shape: 'image',
             image: '/images/terminal.png'
         },
-        "edges": {
+        edges: {
             arrows: 'to',
             color: '#aaa',
-            "smooth": {
-                "type": "continuous",
-                "forceDirection": "none"
+            smooth: {
+                type: 'continuous',
+                forceDirection: 'none'
             }
         },
-        "physics": {
-            "enabled": false
+        physics: {
+            enabled: false
         },
         layout: {
             hierarchical: {
@@ -81,8 +94,44 @@
         }
     };
 
-    // initialize your network!
-    var network = new vis.Network(container, data, options);
+    $.ajax({
+        url: '/pipeline/{{ $pipeline->id }}'
+    }).done(function(resp) {
+
+        var auxNodes = [];
+        for (i = 0; i < resp.nodes.length; i++) {
+            auxNodes.push({
+                id: resp.nodes[i].id,
+                label: resp.nodes[i].name,
+                level: resp.nodes[i].hierarchy_level
+            });
+        }
+
+        var auxConnections = [];
+        for (i = 0; i < resp.connections.length; i++) {
+            auxConnections.push({
+                from: resp.connections[i].from_node_id,
+                to: resp.connections[i].to_node_id
+            });
+        }
+
+
+        var nodes = new vis.DataSet(auxNodes);
+        var edges = new vis.DataSet(auxConnections);
+
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+    });
+
+
+
+});
+
 </script>
 
 

@@ -17,6 +17,7 @@ class CreateNodesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('type');
+            $table->integer('hierarchy_level');
 
             $table->integer('pipeline_id')->unsigned();
             $table->foreign('pipeline_id')->references('id')->on('pipelines');

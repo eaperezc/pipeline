@@ -20,6 +20,8 @@ Route::get('/', function () {
 });
 
 
+Route::get('/pipeline/{id}', 'PipelineController@structure');
+Route::get('/pipeline/{id}/nodes', 'PipelineController@nodes');
 
 Route::get('/nodes/create/{ancestor_node_id}', 'NodeController@create');
 Route::post('/nodes/store', 'NodeController@store');
