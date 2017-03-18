@@ -19,6 +19,7 @@ class PipelineDiagram {
     constructor() {
 
         this.container = document.getElementById('mynetwork');
+        this.selected_node_id = null;
 
         this.setupOptions();
         this.loadData();
@@ -61,6 +62,7 @@ class PipelineDiagram {
     loadData() {
 
         var self = this;
+        this.selected_node_id = null;
 
         $.ajax({
             url: '/pipeline/' + pipeline_id
@@ -68,11 +70,21 @@ class PipelineDiagram {
 
             var auxNodes = [];
             for (i = 0; i < resp.nodes.length; i++) {
-                auxNodes.push({
+
+                var newNodeObj = {
                     id: resp.nodes[i].id,
                     label: resp.nodes[i].name,
                     level: resp.nodes[i].hierarchy_level
-                });
+                };
+
+                // The first node is the starting one so we show
+                // a different icon only for this node.
+                if (i == 0) {
+                    newNodeObj.image = '/images/light-bulb.png';
+                }
+
+
+                auxNodes.push(newNodeObj);
             }
 
             var auxConnections = [];
@@ -125,6 +137,7 @@ class PipelineDiagram {
         this.network.on('selectNode', function(e) {
             self.OnSelectNode(e);
         });
+
         this.network.on('release', function(e) {
             self.OnSelectNode(e);
         });
@@ -138,23 +151,21 @@ class PipelineDiagram {
     OnSelectNode(e) {
 
         e.event.preventDefault();
-        selected = this.network.getSelectedNodes();
-        nodes = this.data.nodes.get(selected);
+        this.selected_node_id = null;
+
+        var selected = this.network.getSelectedNodes();
+        var nodes = this.data.nodes.get(selected);
         if (nodes.length > 0) {
             var node = nodes[0];
             $('#node-name').text(node.label);
-        }
 
+            this.selected_node_id = selected[0];
+
+            $('#details-info').addClass('hidden');
+            $('#details-form').removeClass('hidden');
+        }
     }
 
 }
 
-
-/**
- * This is the starting point where we will initialize the network diagram
- * but maybe later we could move this to the app.js so this class stays
- * clean and only has the declaration of the Diagram Class.
- */
-$( document ).ready(function() {
-    var diagram = new PipelineDiagram();
-});
+module.exports = PipelineDiagram;

@@ -113,7 +113,15 @@ class NodeController extends Controller
      */
     public function destroy($id)
     {
-        $node = Node::findOrFail($id);
-        $node->delete();
+        DB::transaction(function () use ($id) {
+
+            $node = Node::findOrFail($id);
+            Connection::where('to_node_id', $id)->delete();
+            $node->delete();
+
+        });
+
+        return [ 'success' => true ];
+
     }
 }

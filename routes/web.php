@@ -25,3 +25,4 @@ Route::get('/pipeline/{id}/nodes', 'PipelineController@nodes');
 
 Route::get('/nodes/create/{ancestor_node_id}', 'NodeController@create');
 Route::post('/nodes/store', 'NodeController@store');
+Route::delete('/nodes/{id}', 'NodeController@destroy');

@@ -13,4 +13,16 @@ require('./bootstrap');
  * everywhere. But in this case is only the PipelineDiagram.js
  */
 
-require('./network/PipelineDiagram.js');
+const PipelineDiagram = require('./network/PipelineDiagram.js');
+
+
+/**
+ * This is the starting point where we will initialize the network diagram
+ * but maybe later we could move this to the app.js so this class stays
+ * clean and only has the declaration of the Diagram Class.
+ */
+$( document ).ready(function() {
+    window.app = {
+        pipeline: new PipelineDiagram()
+    };
+});

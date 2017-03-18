@@ -10,13 +10,21 @@
 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.18.1/vis.min.css">
 
+        <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
+
+        <link rel="stylesheet" type="text/css" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css ">
+
         <style type="text/css">
             *:focus {
                 outline:none !important;
             }
         </style>
 
-        <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}">
+        <script>
+            window.Laravel = <?php echo json_encode([
+                'csrfToken' => csrf_token(),
+            ]); ?>
+        </script>
 
 
     </head>
@@ -84,7 +92,11 @@
 
                         <h3>Details</h3>
 
-                        <form class="form-horizontal">
+                        <div id="details-info" class="well">
+                            <p>Please select a node to get more options and see all the details for it.</p>
+                        </div>
+
+                        <form id="details-form" class="form-horizontal hidden">
 
                             <div class="form-group">
 
@@ -101,9 +113,23 @@
                             </div>
 
 
-                            <button type="submit" class="btn btn-success">Add Child</button>
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                                data-toggle="modal"
+                                data-target="#new-node-modal">
+                                Add Child
+                            </button>
+
                             <button type="submit" class="btn btn-primary">Edit</button>
-                            <button type="submit" class="btn btn-danger">Delete</button>
+
+                            <button
+                                id="delete-node-button"
+                                type="submit"
+                                class="btn btn-danger">
+                                Delete
+                            </button>
+
                         </form>
                     </div>
                 </div>
@@ -126,13 +152,139 @@
         </div>
 
 
+        @include('nodes.modal.create')
+
+
+        <!--
+            This is the place where the magic happens, this app.js
+            has all the javascript code that will take care of
+            making this page as cool as it can be.
+        -->
+        <script src="{{ mix('js/app.js') }}"></script>
+
 
         <script type="text/javascript">
             var pipeline_id = '{{ $pipeline->id }}';
+
+
+            $('.new-node-form').submit(function(e){
+                e.preventDefault();
+            });
+
+
+            $('#submit-new-node').click(function(e){
+                e.preventDefault();
+
+                var form = $('.new-node-form');
+                var form_data = form.serializeArray();
+                var post_data = {};
+
+                $.each(form_data, function() {
+                    post_data[this.name] = this.value;
+                });
+
+                if (app.pipeline.selected_node_id !== null) {
+                    post_data.from_node_id = app.pipeline.selected_node_id;
+
+                    var button = $(this);
+                    var auxText = button.html();
+
+                    button
+                        .addClass('disabled')
+                        .html('<i class="fa fa-refresh fa-spin fa-fw"></i>' + auxText);
+
+                    $.post({
+                        url: form.attr('action'),
+                        data: post_data
+                    }).done(function(){
+                        $('#new-node-modal').modal('hide');
+
+                        button
+                            .removeClass('disabled')
+                            .html(auxText);
+
+                        app.pipeline.loadData();
+
+                        $('#details-info').removeClass('hidden');
+                        $('#details-form').addClass('hidden');
+                    });
+                }
+            });
+
+            $('#delete-node-button').click(function(e){
+                e.preventDefault();
+
+                if (app.pipeline.selected_node_id !== null) {
+
+                    var button = $(this);
+
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to undo this action!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: false
+                    },
+                    function(){
+
+                        var delete_data = {
+                            _method: 'DELETE',
+                            _token: Laravel.csrfToken
+                        };
+
+                        var auxText = button.html();
+                        button
+                            .addClass('disabled')
+                            .html('<i class="fa fa-refresh fa-spin fa-fw"></i>' + auxText);
+
+                        $.post({
+                            url: '/nodes/' + app.pipeline.selected_node_id,
+                            data: delete_data
+                        }).done(function(resp){
+
+                            if (resp.success) {
+
+                                $('#new-node-modal').modal('hide');
+
+                                button
+                                    .removeClass('disabled')
+                                    .html(auxText);
+
+                                app.pipeline.loadData();
+
+                                $('#details-info').removeClass('hidden');
+                                $('#details-form').addClass('hidden');
+
+
+                                swal("Delete Successful", "The node was deleted!", "success");
+
+                            } else {
+
+                                swal("Oops...", "Something went wrong!", "error");
+                            }
+
+
+                        }).fail(function() {
+                            swal("Oops...", "Something went wrong! Make sure you're not trying to delete a node that has child nodes or is the start node of the pipeline.", "error");
+
+                            button
+                                .removeClass('disabled')
+                                .html(auxText);
+
+                        });
+
+                    });
+                } else {
+                    swal("There's no node selected", "Please select the node you want to remove from this pipeline.", "info");
+                }
+
+            });
+
+
         </script>
 
-
-        <script src="{{ mix('js/app.js') }}"></script>
 
     </body>
 </html>
