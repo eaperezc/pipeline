@@ -20,9 +20,30 @@ Route::get('/', function () {
 });
 
 
-Route::get('/pipeline/{id}', 'PipelineController@structure');
 Route::get('/pipeline/{id}/nodes', 'PipelineController@nodes');
 
 Route::get('/nodes/create/{ancestor_node_id}', 'NodeController@create');
 Route::post('/nodes/store', 'NodeController@store');
 Route::delete('/nodes/{id}', 'NodeController@destroy');
+
+
+/*
+|--------------------------------------------------------------------------
+| Pipeline Nodes Routes
+|--------------------------------------------------------------------------
+|
+| Here is where we add all the routes for the node management in the
+| pipeline diagram. With this routes we can modify every node to
+| get the right process that we want to run
+|
+*/
+
+Route::get      ('/pipeline/{pipeline}', 'PipelineController@structure');
+Route::post     ('/pipeline/{pipeline}/nodes', 'NodeController@store');
+Route::delete   ('/pipeline/{pipeline}/nodes/{node}', 'NodeController@destroy');
+
+
+
+
+
+

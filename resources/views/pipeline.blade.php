@@ -34,7 +34,7 @@
         <nav class="navbar navbar-default navbar-fixed-top">
 
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Brand</a>
+                <a class="navbar-brand" href="#">PipelineBulb</a>
             </div>
 
 
@@ -61,10 +61,9 @@
 
             <div class="col-xs-2" style="margin-top: 60px">
 
-                <h1>{{ $pipeline->name }}</h1>
+                <input id="pipeline-name" type="text" value="{{ $pipeline->name }}"></input>
 
-
-                <h2>Nodes:</h2>
+                <h2 style="margin-top: 100px">Nodes:</h2>
 
                 <ul class="list-group">
 
@@ -96,7 +95,7 @@
                             <p>Please select a node to get more options and see all the details for it.</p>
                         </div>
 
-                        <form id="details-form" class="form-horizontal hidden">
+                        <div id="details-form" class="form-horizontal hidden">
 
                             <div class="form-group">
 
@@ -112,9 +111,7 @@
 
                             </div>
 
-
                             <button
-                                type="submit"
                                 class="btn btn-success"
                                 data-toggle="modal"
                                 data-target="#new-node-modal">
@@ -130,7 +127,7 @@
                                 Delete
                             </button>
 
-                        </form>
+                        </div>
                     </div>
                 </div>
 
@@ -214,7 +211,7 @@
             $('#delete-node-button').click(function(e){
                 e.preventDefault();
 
-                if (app.pipeline.selected_node_id !== null) {
+                if (app.pipeline.selected_node !== null) {
 
                     var button = $(this);
 
@@ -225,27 +222,17 @@
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: "Yes, delete it!",
-                        closeOnConfirm: false
+                        closeOnConfirm: true
                     },
                     function(){
-
-                        var delete_data = {
-                            _method: 'DELETE',
-                            _token: Laravel.csrfToken
-                        };
 
                         var auxText = button.html();
                         button
                             .addClass('disabled')
                             .html('<i class="fa fa-refresh fa-spin fa-fw"></i>' + auxText);
 
-                        $.post({
-                            url: '/nodes/' + app.pipeline.selected_node_id,
-                            data: delete_data
-                        }).done(function(resp){
-
-                            if (resp.success) {
-
+                        app.pipeline.selected_node.destroy(
+                            function() {
                                 $('#new-node-modal').modal('hide');
 
                                 button
@@ -259,23 +246,18 @@
 
 
                                 swal("Delete Successful", "The node was deleted!", "success");
+                            },
+                            function() {
+                                swal("Oops...", "Something went wrong! Make sure you're not trying to delete a node that has child nodes or is the start node of the pipeline.", "error");
 
-                            } else {
-
-                                swal("Oops...", "Something went wrong!", "error");
+                                button
+                                    .removeClass('disabled')
+                                    .html(auxText);
                             }
-
-
-                        }).fail(function() {
-                            swal("Oops...", "Something went wrong! Make sure you're not trying to delete a node that has child nodes or is the start node of the pipeline.", "error");
-
-                            button
-                                .removeClass('disabled')
-                                .html(auxText);
-
-                        });
+                        );
 
                     });
+
                 } else {
                     swal("There's no node selected", "Please select the node you want to remove from this pipeline.", "info");
                 }

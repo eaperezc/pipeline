@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
+use App\Node;
+use App\Connection;
 
 class Pipeline extends Model
 {
@@ -20,16 +23,14 @@ class Pipeline extends Model
     }
 
 
-    public function addNode(Node $node, Node $parent_node)
+
+    public function addNode(Node $node, Node $parent)
     {
         try {
 
-            // Im not using this yet, I just have it here for now
-            // So I can review later if this transaction makes sense
             DB::beginTransaction();
 
             $node->hierarchy_level = $parent->hierarchy_level + 1;
-
             $node->save();
 
             $connection = new Connection([
@@ -40,9 +41,7 @@ class Pipeline extends Model
 
             $connection->save();
 
-
             DB::commit();
-
 
             return $node;
 
@@ -50,9 +49,36 @@ class Pipeline extends Model
         } catch (Exception $e) {
 
             DB::rollback();
-
         }
+    }
 
+
+
+    public function removeNode(Node $node)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            // Delete all connection to the node
+            Connection::where('to_node_id', $node->id)->delete();
+
+            // Then delete the node
+            $node->delete();
+
+            DB::commit();
+
+            // return a success value
+            return [ 'success' => true ];
+
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+
+            // return a failure message
+            return [ 'success' => false ];
+        }
     }
 
 

@@ -5,26 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use DB;
+use App\Pipeline;
 use App\Node;
 use App\Connection;
 
 
 class NodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
+     * @version -1 deprecated and only for testing
      */
     public function create($ancestor_node_id)
     {
@@ -67,61 +60,28 @@ class NodeController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $node = Node::findOrFail($id);
-        return $node;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Node $node)
     {
-        $node = Node::findOrFail($id);
         $node->fill($request->all);
         $node->save();
-
         return $node;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Pipeline     $pipeline   Pipeline object
+     * @param  Node         $pipeline   Selected Node object
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Pipeline $pipeline, Node $node)
     {
-        DB::transaction(function () use ($id) {
-
-            $node = Node::findOrFail($id);
-            Connection::where('to_node_id', $id)->delete();
-            $node->delete();
-
-        });
-
-        return [ 'success' => true ];
-
+        return $pipeline->removeNode($node);
     }
 }

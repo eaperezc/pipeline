@@ -11170,7 +11170,7 @@ __webpack_require__(29);
  * everywhere. But in this case is only the PipelineDiagram.js
  */
 
-var PipelineDiagram = __webpack_require__(30);
+var PipelineDiagram = __webpack_require__(46);
 
 /**
  * This is the starting point where we will initialize the network diagram
@@ -12086,200 +12086,7 @@ window.axios.defaults.headers.common = {
 // });
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Including visjs library on this file
-window.vis = __webpack_require__(34);
-
-/**
- * PipelineDiagram Class
- *
- * This class has all the functionality for the network diagram
- * that we display for the pipeline.
- */
-
-var PipelineDiagram = function () {
-
-    /**
-     * Constructor of the class where we will initialize
-     * the options and get the data for the pipeline.
-     * The element if for the container could be
-     * a paramenter here to be more dynamic.
-     */
-    function PipelineDiagram() {
-        _classCallCheck(this, PipelineDiagram);
-
-        this.container = document.getElementById('mynetwork');
-        this.selected_node_id = null;
-
-        this.setupOptions();
-        this.loadData();
-    }
-
-    /**
-     * Here we setup all the options for the VisJs network diagram
-     * were we see what are the default values and configuration
-     */
-
-
-    _createClass(PipelineDiagram, [{
-        key: 'setupOptions',
-        value: function setupOptions() {
-            this.options = {
-                nodes: {
-                    shape: 'image',
-                    image: '/images/terminal.png'
-                },
-                edges: {
-                    arrows: 'to',
-                    color: '#aaa',
-                    smooth: {
-                        type: 'continuous',
-                        forceDirection: 'none'
-                    }
-                },
-                physics: {
-                    enabled: false
-                },
-                layout: {
-                    hierarchical: {
-                        direction: 'LR'
-                    }
-                }
-            };
-        }
-
-        /**
-         * Method that will load the structure of the pipeline and
-         * will prepare the data object that the visualization
-         * library will use to draw all the nodes and edges
-         */
-
-    }, {
-        key: 'loadData',
-        value: function loadData() {
-
-            var self = this;
-            this.selected_node_id = null;
-
-            $.ajax({
-                url: '/pipeline/' + pipeline_id
-            }).done(function (resp) {
-
-                var auxNodes = [];
-                for (i = 0; i < resp.nodes.length; i++) {
-
-                    var newNodeObj = {
-                        id: resp.nodes[i].id,
-                        label: resp.nodes[i].name,
-                        level: resp.nodes[i].hierarchy_level
-                    };
-
-                    // The first node is the starting one so we show
-                    // a different icon only for this node.
-                    if (i == 0) {
-                        newNodeObj.image = '/images/light-bulb.png';
-                    }
-
-                    auxNodes.push(newNodeObj);
-                }
-
-                var auxConnections = [];
-                for (i = 0; i < resp.connections.length; i++) {
-                    auxConnections.push({
-                        from: resp.connections[i].from_node_id,
-                        to: resp.connections[i].to_node_id
-                    });
-                }
-
-                var nodes = new vis.DataSet(auxNodes);
-                var edges = new vis.DataSet(auxConnections);
-
-                self.data = {
-                    nodes: nodes,
-                    edges: edges
-                };
-
-                self.initNetwork();
-            });
-        }
-
-        /**
-         * This is the place where we actually create the network diagram
-         * with all the data that we prepared. Also some events are
-         * added here to be able to select a node and get its data
-         */
-
-    }, {
-        key: 'initNetwork',
-        value: function initNetwork() {
-
-            // Cached variable for this object
-            var self = this;
-
-            // initialize your network!
-            this.network = new vis.Network(this.container, this.data, this.options);
-
-            // Events
-            this.network.on('oncontext', function (e) {
-                e.event.preventDefault();
-                node = this.network.getNodeAt(e.pointer.DOM);
-
-                if (node) {
-                    this.network.selectNodes([node]);
-
-                    window.location = "/nodes/create/" + node;
-                }
-            });
-
-            this.network.on('selectNode', function (e) {
-                self.OnSelectNode(e);
-            });
-
-            this.network.on('release', function (e) {
-                self.OnSelectNode(e);
-            });
-        }
-
-        /**
-         * When we select a node on the diagram or when we finish the
-         * drag (release event) we want to make sure we have that
-         * node information available so we use him later on.
-         */
-
-    }, {
-        key: 'OnSelectNode',
-        value: function OnSelectNode(e) {
-
-            e.event.preventDefault();
-            this.selected_node_id = null;
-
-            var selected = this.network.getSelectedNodes();
-            var nodes = this.data.nodes.get(selected);
-            if (nodes.length > 0) {
-                var node = nodes[0];
-                $('#node-name').text(node.label);
-
-                this.selected_node_id = selected[0];
-
-                $('#details-info').addClass('hidden');
-                $('#details-form').removeClass('hidden');
-            }
-        }
-    }]);
-
-    return PipelineDiagram;
-}();
-
-module.exports = PipelineDiagram;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
+/* 30 */,
 /* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -83967,6 +83774,400 @@ module.exports = function(module) {
 __webpack_require__(9);
 module.exports = __webpack_require__(10);
 
+
+/***/ }),
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Including visjs library on this file
+window.vis = __webpack_require__(34);
+var Node = __webpack_require__(47);
+
+/**
+ * PipelineDiagram Class
+ *
+ * This class has all the functionality for the network diagram
+ * that we display for the pipeline.
+ */
+
+var PipelineDiagram = function () {
+
+    /**
+     * Constructor of the class where we will initialize
+     * the options and get the data for the pipeline.
+     * The element if for the container could be
+     * a paramenter here to be more dynamic.
+     */
+    function PipelineDiagram() {
+        _classCallCheck(this, PipelineDiagram);
+
+        this.container = document.getElementById('mynetwork');
+        this.selected_node_id = null;
+        this.nodes = [];
+        this.selected_node = null;
+        this.id = 1;
+
+        this.setupOptions();
+        this.loadData();
+    }
+
+    /**
+     * Here we setup all the options for the VisJs network diagram
+     * were we see what are the default values and configuration
+     */
+
+
+    _createClass(PipelineDiagram, [{
+        key: 'setupOptions',
+        value: function setupOptions() {
+            this.options = {
+                nodes: {
+                    shape: 'image',
+                    image: '/images/terminal.png'
+                },
+                edges: {
+                    arrows: 'to',
+                    color: '#aaa',
+                    smooth: {
+                        type: 'continuous',
+                        forceDirection: 'none'
+                    }
+                },
+                physics: {
+                    enabled: false
+                },
+                layout: {
+                    hierarchical: {
+                        direction: 'LR'
+                    }
+                }
+            };
+        }
+
+        /**
+         * Method that will load the structure of the pipeline and
+         * will prepare the data object that the visualization
+         * library will use to draw all the nodes and edges
+         */
+
+    }, {
+        key: 'loadData',
+        value: function loadData() {
+
+            var self = this;
+            this.selected_node_id = null;
+
+            $.ajax({
+                url: '/pipeline/' + pipeline_id
+            }).done(function (resp) {
+
+                var auxNodes = [];
+                for (i = 0; i < resp.nodes.length; i++) {
+
+                    var node = new Node(resp.nodes[i].id, resp.nodes[i].name, resp.nodes[i].hierarchy_level, self, 'script');
+
+                    // The first node is the starting one so we show
+                    // a different icon only for this node.
+                    if (i == 0) {
+                        node.type = 'start';
+                    }
+
+                    self.nodes.push(node);
+                    auxNodes.push(node.toVisObject());
+                }
+
+                var auxConnections = [];
+                for (i = 0; i < resp.connections.length; i++) {
+                    auxConnections.push({
+                        from: resp.connections[i].from_node_id,
+                        to: resp.connections[i].to_node_id
+                    });
+                }
+
+                var nodes = new vis.DataSet(auxNodes);
+                var edges = new vis.DataSet(auxConnections);
+
+                self.data = {
+                    nodes: nodes,
+                    edges: edges
+                };
+
+                self.initNetwork();
+            });
+        }
+
+        /**
+         * This is the place where we actually create the network diagram
+         * with all the data that we prepared. Also some events are
+         * added here to be able to select a node and get its data
+         */
+
+    }, {
+        key: 'initNetwork',
+        value: function initNetwork() {
+
+            // Cached variable for this object
+            var self = this;
+
+            // initialize your network!
+            this.network = new vis.Network(this.container, this.data, this.options);
+
+            // Events
+            this.network.on('oncontext', function (e) {
+                e.event.preventDefault();
+                node = this.network.getNodeAt(e.pointer.DOM);
+
+                if (node) {
+                    this.network.selectNodes([node]);
+
+                    window.location = "/nodes/create/" + node;
+                }
+            });
+
+            this.network.on('selectNode', function (e) {
+                self.OnSelectNode(e);
+            });
+
+            this.network.on('release', function (e) {
+                self.OnSelectNode(e);
+            });
+        }
+
+        /**
+         * When we select a node on the diagram or when we finish the
+         * drag (release event) we want to make sure we have that
+         * node information available so we use him later on.
+         */
+
+    }, {
+        key: 'OnSelectNode',
+        value: function OnSelectNode(e) {
+
+            e.event.preventDefault();
+            this.selected_node = null;
+            this.selected_node_id = null;
+
+            var selected = this.network.getSelectedNodes();
+            var nodes = this.data.nodes.get(selected);
+
+            if (nodes.length > 0) {
+                var node = nodes[0];
+                $('#node-name').text(node.label);
+
+                this.selected_node_id = selected[0];
+                this.selected_node = _.find(this.nodes, { 'id': selected[0] });
+
+                $('#details-info').addClass('hidden');
+                $('#details-form').removeClass('hidden');
+            }
+        }
+    }]);
+
+    return PipelineDiagram;
+}();
+
+module.exports = PipelineDiagram;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Pipeline Node Class
+ *
+ * This class has all the functionality for the pipeline
+ * nodes where we can create, edit, update or whatever we
+ * want to do related to nodes.
+ */
+var Node = function () {
+
+    /**
+     * Constructor for node objects
+     * @param  {number} the id of the node
+     * @param  {string} the name for the node
+     * @param  {number} the hierarchy level on the diagram
+     * @param  {object} the pipeline object
+     * @param  {string} the node type
+     * @param  {string} the status of the node (if message)
+     */
+    function Node(id, name, hierarchy_level, pipeline, type, status) {
+        _classCallCheck(this, Node);
+
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.pipeline = pipeline;
+        this.hierarchy_level = hierarchy_level;
+        this.status = status;
+    }
+
+    /**
+     * Getter for the node image
+     * @return {string} the path where the icon is
+     */
+
+
+    _createClass(Node, [{
+        key: 'getIconFromType',
+
+
+        /**
+         * Helper function to get the icon per node type
+         * @return {string} the path where the icon is
+         */
+        value: function getIconFromType() {
+
+            var path = '/images/terminal.png';
+
+            switch (this.type) {
+                case 'start':
+                    path = '/images/light-bulb.png';
+                    break;
+                case 'script':
+                    path = '/images/terminal.png';
+                    break;
+                case 'api':
+                    path = '/images/cloud.png';
+                    break;
+            }
+            return path;
+        }
+
+        /**
+         * Helper function to get the icon per node status
+         * @return {string} the path where the icon is
+         */
+
+    }, {
+        key: 'getIconFromStatus',
+        value: function getIconFromStatus() {
+
+            var path = '/images/cloud.png';
+
+            switch (this.type) {
+                case 'OK':
+                    path = '/images/sign-check.png';
+                    break;
+                case 'ERROR':
+                    path = '/images/sign-error.png';
+                    break;
+            }
+            return path;
+        }
+
+        /**
+         * Static method to create new nodes
+         * @param  {string} Node name
+         * @param  {string} Node type
+         * @param  {number} The parent node id
+         * @param  {number} The Pipeline id
+         */
+
+    }, {
+        key: 'destroy',
+
+
+        /**
+         * Method that deletes the node from the database and
+         * reloads the data so the diagram is refreshed.
+         */
+        value: function destroy(onSuccess, onError) {
+
+            var self = this;
+
+            // get the url to delete a node
+            var url = '/pipeline/' + this.pipeline.id + '/nodes/' + this.id;
+
+            var delete_data = {
+                _method: 'DELETE',
+                _token: Laravel.csrfToken
+            };
+
+            // calls the backend to delete a node
+            $.post({
+                url: url,
+                data: delete_data
+            }).done(function (resp) {
+                if (resp.success && onSuccess) {
+                    onSuccess();
+                } else {
+                    onError();
+                }
+            }).fail(function () {
+                if (onError) {
+                    onError();
+                }
+            });
+        }
+
+        /**
+         * This Helper method gets the data that visjs requires
+         * to render the node in the network diagram.
+         * @return {json} The Vis node config object
+         */
+
+    }, {
+        key: 'toVisObject',
+        value: function toVisObject() {
+            return {
+                id: this.id,
+                label: this.name,
+                level: this.hierarchy_level,
+                image: this.icon
+            };
+        }
+    }, {
+        key: 'icon',
+        get: function get() {
+            return this.getIconFromType();
+        }
+    }], [{
+        key: 'create',
+        value: function create(name, type, from_node_id, pipeline_id) {
+
+            // get the url to create a node
+            var url = '/pipeline/' + pipeline_id + '/nodes';
+
+            $.post({
+                url: url,
+                data: {
+                    name: name,
+                    type: type,
+                    from_node_id: from_node_id,
+                    pipeline_id: pipeline_id,
+                    _token: Laravel.csrfToken
+                }
+            }).done(function () {
+                app.pipeline.loadData();
+            });
+        }
+    }]);
+
+    return Node;
+}();
+
+// Export this module
+
+
+module.exports = Node;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ })
 /******/ ]);

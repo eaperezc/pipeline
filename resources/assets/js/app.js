@@ -13,7 +13,7 @@ require('./bootstrap');
  * everywhere. But in this case is only the PipelineDiagram.js
  */
 
-const PipelineDiagram = require('./network/PipelineDiagram.js');
+const PipelineDiagram = require('./pipeline/PipelineDiagram.js');
 
 
 /**

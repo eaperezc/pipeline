@@ -10,17 +10,12 @@ use App\Pipeline;
 class PipelineController extends Controller
 {
 
-    public function structure($id)
+    public function structure(Pipeline $pipeline)
     {
-        $pipeline = Pipeline::findOrFail($id);
-        $nodes = $pipeline->nodes;
-        $connections = $pipeline->connections;
-
         return [
-            'nodes'         => $nodes,
-            'connections'   => $connections
+            'nodes'         => $pipeline->nodes,
+            'connections'   => $pipeline->connections
         ];
-
     }
 
 
@@ -29,6 +24,5 @@ class PipelineController extends Controller
         $pipeline = Pipeline::findOrFail($id);
         return (string) $pipeline->nodes;
     }
-
 
 }

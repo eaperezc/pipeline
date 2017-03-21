@@ -1,6 +1,7 @@
 
 // Including visjs library on this file
 window.vis = require('vis');
+const Node = require('./Node.js');
 
 /**
  * PipelineDiagram Class
@@ -20,6 +21,9 @@ class PipelineDiagram {
 
         this.container = document.getElementById('mynetwork');
         this.selected_node_id = null;
+        this.nodes = [];
+        this.selected_node = null;
+        this.id = 1;
 
         this.setupOptions();
         this.loadData();
@@ -71,20 +75,22 @@ class PipelineDiagram {
             var auxNodes = [];
             for (i = 0; i < resp.nodes.length; i++) {
 
-                var newNodeObj = {
-                    id: resp.nodes[i].id,
-                    label: resp.nodes[i].name,
-                    level: resp.nodes[i].hierarchy_level
-                };
+                var node = new Node(
+                    resp.nodes[i].id,
+                    resp.nodes[i].name,
+                    resp.nodes[i].hierarchy_level,
+                    self,
+                    'script'
+                );
 
                 // The first node is the starting one so we show
                 // a different icon only for this node.
                 if (i == 0) {
-                    newNodeObj.image = '/images/light-bulb.png';
+                    node.type = 'start';
                 }
 
-
-                auxNodes.push(newNodeObj);
+                self.nodes.push(node);
+                auxNodes.push(node.toVisObject());
             }
 
             var auxConnections = [];
@@ -151,15 +157,19 @@ class PipelineDiagram {
     OnSelectNode(e) {
 
         e.event.preventDefault();
+        this.selected_node = null;
         this.selected_node_id = null;
 
         var selected = this.network.getSelectedNodes();
         var nodes = this.data.nodes.get(selected);
+
         if (nodes.length > 0) {
             var node = nodes[0];
             $('#node-name').text(node.label);
 
             this.selected_node_id = selected[0];
+            this.selected_node = _.find(this.nodes, { 'id': selected[0] });
+
 
             $('#details-info').addClass('hidden');
             $('#details-form').removeClass('hidden');
