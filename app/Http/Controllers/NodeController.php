@@ -14,56 +14,26 @@ class NodeController extends Controller
 {
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     * @version -1 deprecated and only for testing
-     */
-    public function create($ancestor_node_id)
-    {
-        $from_node = Node::findOrFail($ancestor_node_id);
-        return view('nodes.create', [ 'from_node' => $from_node ]);
-
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  Pipeline     $pipeline   Pipeline object
+     * @param  Node         $pipeline   Selected Node object
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Pipeline $pipeline, Node $node)
     {
+        $parent = Node::findOrFail($request->input('from_node_id'));
+        $node = new Node($request->all());
 
-        $node = DB::transaction(function () use ($request) {
-
-            $parent = Node::findOrFail($request->input('from_node_id'));
-
-            $node = new Node($request->all());
-            $node->hierarchy_level = $parent->hierarchy_level + 1;
-
-            $node->save();
-
-            $connection = new Connection([
-                'from_node_id' => $parent->id,
-                'to_node_id' => $node->id,
-                'pipeline_id' => $node->pipeline_id
-            ]);
-
-            $connection->save();
-
-            return $node;
-
-        });
-
-        return redirect('/');
+        return $pipeline->addNode($node, $parent);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request  The request object
+     * @param  \App\Node                $node     The node to update
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Node $node)

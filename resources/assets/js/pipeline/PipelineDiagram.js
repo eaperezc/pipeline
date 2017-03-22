@@ -20,7 +20,6 @@ class PipelineDiagram {
     constructor() {
 
         this.container = document.getElementById('mynetwork');
-        this.selected_node_id = null;
         this.nodes = [];
         this.selected_node = null;
         this.id = 1;
@@ -66,7 +65,7 @@ class PipelineDiagram {
     loadData() {
 
         var self = this;
-        this.selected_node_id = null;
+        this.selected_node = null;
 
         $.ajax({
             url: '/pipeline/' + pipeline_id
@@ -80,7 +79,7 @@ class PipelineDiagram {
                     resp.nodes[i].name,
                     resp.nodes[i].hierarchy_level,
                     self,
-                    'script'
+                    resp.nodes[i].type
                 );
 
                 // The first node is the starting one so we show
@@ -127,19 +126,6 @@ class PipelineDiagram {
         // initialize your network!
         this.network = new vis.Network(this.container, this.data, this.options);
 
-        // Events
-        this.network.on('oncontext', function(e) {
-            e.event.preventDefault();
-            node = this.network.getNodeAt(e.pointer.DOM);
-
-            if (node) {
-                this.network.selectNodes([ node ]);
-
-                window.location = "/nodes/create/" + node;
-            }
-
-        });
-
         this.network.on('selectNode', function(e) {
             self.OnSelectNode(e);
         });
@@ -158,22 +144,36 @@ class PipelineDiagram {
 
         e.event.preventDefault();
         this.selected_node = null;
-        this.selected_node_id = null;
 
         var selected = this.network.getSelectedNodes();
         var nodes = this.data.nodes.get(selected);
 
         if (nodes.length > 0) {
             var node = nodes[0];
+
             $('#node-name').text(node.label);
-
-            this.selected_node_id = selected[0];
             this.selected_node = _.find(this.nodes, { 'id': selected[0] });
-
 
             $('#details-info').addClass('hidden');
             $('#details-form').removeClass('hidden');
         }
+    }
+
+    /**
+     * Method to add a new node in the pipeline from a json object
+     * @param {json} data The data with the new node info
+     */
+    addNode(data) {
+
+        var self = this;
+
+        // Create a node from the data
+        Node.create(data.name, data.type, this.selected_node.id, this.id,
+            // onSuccess
+            function() {
+                self.loadData();
+            }
+        );
     }
 
 }

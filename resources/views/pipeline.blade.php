@@ -59,28 +59,9 @@
 
         <div class="wrapper">
 
-            <div class="col-xs-2" style="margin-top: 60px">
+            <div id="network-wrapper" class="col-xs-9">
 
                 <input id="pipeline-name" type="text" value="{{ $pipeline->name }}"></input>
-
-                <h2 style="margin-top: 100px">Nodes:</h2>
-
-                <ul class="list-group">
-
-                    @forelse ($pipeline->nodes as $node)
-                        <li class="list-group-item">{{ $node->name }} <a href="/nodes/create/{{ $node->id }}">Add node</a></li>
-                    @empty
-                        <p>No nodes</p>
-                    @endforelse
-
-                </ul>
-
-            </div>
-
-
-
-            <div id="network-wrapper" class="col-xs-7">
-
                 <div id="mynetwork" style="height: 100vh"></div>
 
             </div>
@@ -180,8 +161,7 @@
                     post_data[this.name] = this.value;
                 });
 
-                if (app.pipeline.selected_node_id !== null) {
-                    post_data.from_node_id = app.pipeline.selected_node_id;
+                if (app.pipeline.selected_node !== null) {
 
                     var button = $(this);
                     var auxText = button.html();
@@ -190,21 +170,20 @@
                         .addClass('disabled')
                         .html('<i class="fa fa-refresh fa-spin fa-fw"></i>' + auxText);
 
-                    $.post({
-                        url: form.attr('action'),
-                        data: post_data
-                    }).done(function(){
-                        $('#new-node-modal').modal('hide');
-
-                        button
-                            .removeClass('disabled')
-                            .html(auxText);
-
-                        app.pipeline.loadData();
-
-                        $('#details-info').removeClass('hidden');
-                        $('#details-form').addClass('hidden');
+                    app.pipeline.addNode({
+                        name: post_data['name'],
+                        type: 'api'
                     });
+
+
+                    $('#new-node-modal').modal('hide');
+
+                    button
+                        .removeClass('disabled')
+                        .html(auxText);
+
+                    $('#details-info').removeClass('hidden');
+                    $('#details-form').addClass('hidden');
                 }
             });
 

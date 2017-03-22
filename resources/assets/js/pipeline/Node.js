@@ -82,7 +82,7 @@ class Node {
      * @param  {number} The parent node id
      * @param  {number} The Pipeline id
      */
-    static create(name, type, from_node_id, pipeline_id) {
+    static create(name, type, from_node_id, pipeline_id, onSuccess) {
 
         // get the url to create a node
         let url = '/pipeline/' + pipeline_id + '/nodes';
@@ -97,8 +97,9 @@ class Node {
                 _token: Laravel.csrfToken
             }
         }).done(function(){
-            app.pipeline.loadData();
+            if (onSuccess) { onSuccess(); }
         });
+
     }
 
     /**
@@ -124,7 +125,7 @@ class Node {
         }).done(function(resp){
             if (resp.success && onSuccess) {
                 onSuccess();
-            } else {
+            } else if (onError) {
                 onError();
             }
         }).fail(function(){
