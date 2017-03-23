@@ -22,7 +22,12 @@ const PipelineDiagram = require('./pipeline/PipelineDiagram.js');
  * clean and only has the declaration of the Diagram Class.
  */
 $( document ).ready(function() {
-    window.app = {
-        pipeline: new PipelineDiagram()
-    };
+
+    // Init the pipeline if we have the wrapper
+    if ( $( "#pipeline-diagram" ).length ) {
+        window.app = {
+            pipeline: new PipelineDiagram()
+        };
+    }
+
 });

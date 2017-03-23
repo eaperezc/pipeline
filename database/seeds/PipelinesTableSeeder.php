@@ -12,7 +12,8 @@ class PipelinesTableSeeder extends Seeder
     public function run()
     {
         $id = DB::table('pipelines')->insert([
-            'name' => str_random(10)
+            'name' => str_random(10),
+            'created_at' => new date('Y-m-d')
         ]);
 
         DB::table('nodes')->insert([

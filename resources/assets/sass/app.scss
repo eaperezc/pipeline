@@ -12,6 +12,14 @@
 @import "node_modules/sweetalert/dist/sweetalert";
 
 
+*:focus {
+    outline:none !important;
+}
+
+#app {
+    padding-top: 80px;
+}
+
 
 input#pipeline-name {
     background: transparent;
@@ -19,6 +27,5 @@ input#pipeline-name {
     font-size: 2.6em;
     position: absolute;
     width: 800px;
-    top: 60px;
     z-index: 2;
 }

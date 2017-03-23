@@ -12,10 +12,7 @@
 */
 
 Route::get('/', function () {
-
-    $pipeline = App\Pipeline::first();
-    return view('pipeline', [ 'pipeline' => $pipeline ]);
-
+    return view('welcome');
 });
 
 
@@ -29,13 +26,25 @@ Route::get('/', function () {
 | get the right process that we want to run
 |
 */
+Route::group(['middleware' => ['auth']], function () {
 
-Route::get      ('/pipeline/{pipeline}',                'PipelineController@structure');
-Route::post     ('/pipeline/{pipeline}/nodes',          'NodeController@store');
-Route::delete   ('/pipeline/{pipeline}/nodes/{node}',   'NodeController@destroy');
+    Route::get      ('/pipeline',                           'PipelineController@index');
+    Route::get      ('/pipeline/{pipeline}',                'PipelineController@diagram');
+    Route::get      ('/pipeline/{pipeline}/structure',      'PipelineController@structure');
+    Route::post     ('/pipeline/{pipeline}/nodes',          'NodeController@store');
+    Route::delete   ('/pipeline/{pipeline}/nodes/{node}',   'NodeController@destroy');
+
+});
 
 
-
-
-
-
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+|
+| The routes in here are the ones that will generate all routes necessary
+| to register, login, reset password and everything related to auth.
+|
+*/
+Auth::routes();
+Route::get      ('/home', 'HomeController@index');

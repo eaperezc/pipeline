@@ -19,7 +19,7 @@ class PipelineDiagram {
      */
     constructor() {
 
-        this.container = document.getElementById('mynetwork');
+        this.container = document.getElementById('pipeline-diagram');
         this.nodes = [];
         this.selected_node = null;
         this.id = 1;
@@ -68,7 +68,7 @@ class PipelineDiagram {
         this.selected_node = null;
 
         $.ajax({
-            url: '/pipeline/' + pipeline_id
+            url: '/pipeline/' + pipeline_id + '/structure'
         }).done(function(resp) {
 
             var auxNodes = [];

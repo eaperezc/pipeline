@@ -11178,9 +11178,13 @@ var PipelineDiagram = __webpack_require__(31);
  * clean and only has the declaration of the Diagram Class.
  */
 $(document).ready(function () {
-  window.app = {
-    pipeline: new PipelineDiagram()
-  };
+
+  // Init the pipeline if we have the wrapper
+  if ($("#pipeline-diagram").length) {
+    window.app = {
+      pipeline: new PipelineDiagram()
+    };
+  }
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
@@ -12068,7 +12072,7 @@ __webpack_require__(34);
 window.axios = __webpack_require__(11);
 
 window.axios.defaults.headers.common = {
-  //'X-CSRF-TOKEN': window.Laravel.csrfToken,
+  'X-CSRF-TOKEN': window.Laravel.csrfToken,
   'X-Requested-With': 'XMLHttpRequest'
 };
 
@@ -12305,7 +12309,7 @@ var PipelineDiagram = function () {
     function PipelineDiagram() {
         _classCallCheck(this, PipelineDiagram);
 
-        this.container = document.getElementById('mynetwork');
+        this.container = document.getElementById('pipeline-diagram');
         this.nodes = [];
         this.selected_node = null;
         this.id = 1;
@@ -12361,7 +12365,7 @@ var PipelineDiagram = function () {
             this.selected_node = null;
 
             $.ajax({
-                url: '/pipeline/' + pipeline_id
+                url: '/pipeline/' + pipeline_id + '/structure'
             }).done(function (resp) {
 
                 var auxNodes = [];
