@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use Auth;
 use App\Pipeline;
 
 
@@ -16,7 +18,7 @@ class PipelineController extends Controller
      */
     public function index()
     {
-        $pipelines = Pipeline::paginate(25);
+        $pipelines = Pipeline::where('user_id', Auth::id())->paginate(25);
         return view('pipeline.index', ['pipelines' => $pipelines]);
     }
 
@@ -44,6 +46,25 @@ class PipelineController extends Controller
     public function diagram(Pipeline $pipeline)
     {
         return view('pipeline.diagram', [ 'pipeline' => $pipeline ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Pipeline     $pipeline   Pipeline object
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $pipeline = new Pipeline([
+            'name' => str_random(10),
+            'user_id' => Auth::id()
+        ]);
+
+        $pipeline->create();
+
+        return redirect('/pipeline/' . $pipeline->id);
     }
 
 }

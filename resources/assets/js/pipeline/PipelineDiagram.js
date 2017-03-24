@@ -22,7 +22,7 @@ class PipelineDiagram {
         this.container = document.getElementById('pipeline-diagram');
         this.nodes = [];
         this.selected_node = null;
-        this.id = 1;
+        this.id = pipeline_id;
 
         this.setupOptions();
         this.loadData();
@@ -68,7 +68,7 @@ class PipelineDiagram {
         this.selected_node = null;
 
         $.ajax({
-            url: '/pipeline/' + pipeline_id + '/structure'
+            url: '/pipeline/' + self.id + '/structure'
         }).done(function(resp) {
 
             var auxNodes = [];

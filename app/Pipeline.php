@@ -16,6 +16,8 @@ use App\Connection;
  */
 class Pipeline extends Model
 {
+    protected $fillable = [ 'name', 'user_id' ];
+
     /**
      * The nodes that the pipeline has.
      */
@@ -30,6 +32,14 @@ class Pipeline extends Model
     public function connections()
     {
         return $this->hasMany('App\Connection');
+    }
+
+    /**
+     * The owner of the pipeline
+     * @return App\User
+     */
+    public function user() {
+        return $this->belongsTo('App\User');
     }
 
 
@@ -85,6 +95,11 @@ class Pipeline extends Model
 
             DB::beginTransaction();
 
+            // Validate start node
+            if ($node->type == 'start') {
+                throw new \Exception('The start node cannot be deleted');
+            }
+
             // Delete all connection to the node
             Connection::where('to_node_id', $node->id)->delete();
 
@@ -103,6 +118,44 @@ class Pipeline extends Model
 
             // return a failure message
             return [ 'success' => false ];
+        }
+    }
+
+    /**
+     * Creates the new pipeline with the data that is filled
+     * in this object, and starts the first "start" node
+     *
+     * @return bool If the operation was successful
+     */
+    public function create()
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $this->save();
+
+            $start_node = new Node([
+                'name' => str_random(10),
+                'type' => 'start',
+                'pipeline_id' => $this->id
+            ]);
+
+            $start_node->hierarchy_level = 1;
+            $start_node->save();
+
+            DB::commit();
+
+            // return a success value
+            return true;
+
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+
+            // return a failure message
+            return false;
         }
     }
 

@@ -18,10 +18,9 @@ class NodeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  Pipeline     $pipeline   Pipeline object
-     * @param  Node         $pipeline   Selected Node object
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Pipeline $pipeline, Node $node)
+    public function store(Request $request, Pipeline $pipeline)
     {
         $parent = Node::findOrFail($request->input('from_node_id'));
         $node = new Node($request->all());

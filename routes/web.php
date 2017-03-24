@@ -29,6 +29,7 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get      ('/pipeline',                           'PipelineController@index');
+    Route::get      ('/pipeline/create',                    'PipelineController@store');
     Route::get      ('/pipeline/{pipeline}',                'PipelineController@diagram');
     Route::get      ('/pipeline/{pipeline}/structure',      'PipelineController@structure');
     Route::post     ('/pipeline/{pipeline}/nodes',          'NodeController@store');

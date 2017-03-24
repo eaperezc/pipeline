@@ -11,16 +11,23 @@ class PipelinesTableSeeder extends Seeder
      */
     public function run()
     {
-        $id = DB::table('pipelines')->insert([
+        $user_id = DB::table('users')->insert([
+            'name' => 'Enrique',
+            'email' => 'eperez@test.com',
+            'password' => bcrypt('test123')
+        ]);
+
+        $pipeline_id = DB::table('pipelines')->insert([
             'name' => str_random(10),
-            'created_at' => new date('Y-m-d')
+            'user_id' => $user_id,
+            'created_at' => Carbon\Carbon::now()
         ]);
 
         DB::table('nodes')->insert([
             'name' => str_random(10),
-            'type' => 'empty',
             'hierarchy_level' => 1,
-            'pipeline_id' => $id
+            'type' => 'start',
+            'pipeline_id' => $pipeline_id
         ]);
     }
 }
