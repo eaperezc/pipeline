@@ -149,13 +149,9 @@ class PipelineDiagram {
         var nodes = this.data.nodes.get(selected);
 
         if (nodes.length > 0) {
-            var node = nodes[0];
 
-            $('#node-name').text(node.label);
             this.selected_node = _.find(this.nodes, { 'id': selected[0] });
-
-            $('#details-info').addClass('hidden');
-            $('#details-form').removeClass('hidden');
+            diagram.changeNode(this.selected_node);
         }
     }
 
