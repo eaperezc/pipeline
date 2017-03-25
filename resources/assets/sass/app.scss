@@ -29,3 +29,32 @@ input#pipeline-name {
     width: 800px;
     z-index: 2;
 }
+
+
+.selector {
+    padding: 20px;
+
+    &-item {
+        padding: 10px;
+        display: inline-block;
+        text-align: center;
+        width: 19%;
+
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+
+        &:hover {
+            background: #efefef;
+            cursor: pointer;
+        }
+
+        img {
+            width: 100%;
+        }
+
+        &.selected {
+            background: #ffdb92;
+        }
+    }
+}

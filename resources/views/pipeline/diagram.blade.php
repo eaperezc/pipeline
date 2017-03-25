@@ -12,10 +12,38 @@
     </div>
 
     <div class="col-xs-3">
+
+        <div class="panel" style="background-color:transparent; box-shadow: none">
+            <div class="panel-body" style="padding:0;">
+
+                <div class="btn-group pull-right" data-toggle="buttons">
+                    <label class="btn btn-default disabled">
+                        Status:
+                        @if ($pipeline->status)
+                        <i style="color:green" class="fa fa-circle" aria-hidden="true"></i>
+                        @else
+                        <i style="color:red" class="fa fa-circle" aria-hidden="true"></i>
+                        @endif
+                    </label>
+                    <label class="btn btn-default">
+                        <i class="fa fa-heart"></i>
+                    </label>
+                    <label class="btn btn-default">
+                        <i class="fa fa-cog"></i> Settings
+                    </label>
+                    <label class="btn btn-default">
+                        <i class="fa fa-power-off"></i> Turn Off
+                    </label>
+                </div>
+
+
+            </div>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-body">
 
-                <h3>Details</h3>
+                <h3>Node Details</h3>
 
                 <div id="details-info" class="well">
                     <p>Please select a node to get more options and see all the details for it.</p>
@@ -108,15 +136,23 @@
             var button = $(this);
             var auxText = button.html();
 
+
+            var nodeType = $('.selector-item.selected p').text();
+            if (nodeType == "") {
+                return;
+            }
+
             button
                 .addClass('disabled')
                 .html('<i class="fa fa-refresh fa-spin fa-fw"></i>' + auxText);
 
             app.pipeline.addNode({
                 name: post_data['name'],
-                type: 'api'
+                type: nodeType
             });
 
+            $('.selector-item.selected').removeClass('selected')
+                            .siblings().removeClass('selected');
 
             $('#new-node-modal').modal('hide');
 
@@ -183,6 +219,11 @@
             swal("There's no node selected", "Please select the node you want to remove from this pipeline.", "info");
         }
 
+    });
+
+    // for the new node selector
+    $('.selector-item').click(function(e) {
+        $(this).addClass('selected').siblings().removeClass('selected');
     });
 
     $('.dropdown-toggle').dropdown();

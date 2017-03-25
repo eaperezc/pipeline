@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Auth;
 use App\Pipeline;
-
+use App\Enum\NodeTypes;
 
 class PipelineController extends Controller
 {
@@ -45,7 +45,11 @@ class PipelineController extends Controller
      */
     public function diagram(Pipeline $pipeline)
     {
-        return view('pipeline.diagram', [ 'pipeline' => $pipeline ]);
+        $node_types = NodeTypes::all();
+        return view('pipeline.diagram', [
+            'pipeline' => $pipeline,
+            'node_types' => $node_types
+        ]);
     }
 
     /**

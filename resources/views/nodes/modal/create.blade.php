@@ -11,13 +11,22 @@
 
       <div class="modal-body">
 
-        <form class="new-node-form form-horizontal" action="/nodes/store" method="POST">
+        <form class="new-node-form form-horizontal" method="POST">
 
             {{ csrf_field() }}
 
+                <div class="selector">
+                @foreach ($node_types as $node_type)
+                    <div class="selector-item">
+                        <img src="{{ $node_type['icon'] }}">
+                        <p>{{ $node_type['name'] }}</p>
+                    </div>
+                @endforeach
+                </div>
+
+
             <div class="form-group">
-                <label for="name" class="col-sm-2 control-label">Name</label>
-                <div class="col-sm-10">
+                <div class="col-sm-12">
                     <input type="text" class="form-control" name="name" placeholder="New node name">
                 </div>
             </div>
@@ -32,10 +41,11 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button id="submit-new-node" type="button" class="btn btn-primary">Save changes</button>
+        <button id="submit-new-node" type="button" class="btn btn-primary">Add Node</button>
       </div>
 
 
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+

@@ -46,11 +46,35 @@ class Node {
             case 'start':
                 path = '/images/light-bulb.png';
                 break;
+            case 'email':
+                path = '/images/email.png';
+                break;
+            case 'sms':
+                path = '/images/sms.png';
+                break;
+            case 'report':
+                path = '/images/report.png';
+                break;
+            case 'analytics':
+                path = '/images/analytics.png';
+                break;
+            case 'timer':
+                path = '/images/clock.png';
+                break;
             case 'script':
                 path = '/images/terminal.png';
                 break;
             case 'api':
                 path = '/images/cloud.png';
+                break;
+            case 'database':
+                path = '/images/database.png';
+                break;
+            case 'facebook':
+                path = '/images/facebook.png';
+                break;
+            case 'googleplus':
+                path = '/images/googleplus.png';
                 break;
         }
         return path;
