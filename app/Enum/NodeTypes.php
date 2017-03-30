@@ -26,7 +26,6 @@ class NodeTypes
             'name' => 'analytics',
             'icon' => '/images/analytics.png'
         ],
-
         [
             'name' => 'timer',
             'icon' => '/images/clock.png'

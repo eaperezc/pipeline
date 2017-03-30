@@ -70,5 +70,4 @@ class PipelineController extends Controller
 
         return redirect('/pipeline/' . $pipeline->id);
     }
-
 }

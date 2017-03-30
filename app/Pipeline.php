@@ -38,7 +38,8 @@ class Pipeline extends Model
      * The owner of the pipeline
      * @return App\User
      */
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
@@ -54,7 +55,7 @@ class Pipeline extends Model
     public function addNode(Node $node, Node $parent)
     {
         try {
-
+            // Begin transaction
             DB::beginTransaction();
 
             $node->hierarchy_level = $parent->hierarchy_level + 1;
@@ -72,9 +73,9 @@ class Pipeline extends Model
 
             return $node;
 
-
+        // Catch any exception
         } catch (Exception $e) {
-
+            // Rollback any db changes
             DB::rollback();
         }
     }
@@ -92,7 +93,7 @@ class Pipeline extends Model
     public function removeNode(Node $node)
     {
         try {
-
+            // Init transaction
             DB::beginTransaction();
 
             // Validate start node
@@ -111,9 +112,9 @@ class Pipeline extends Model
             // return a success value
             return [ 'success' => true ];
 
-
+        // Catch any Exception
         } catch (Exception $e) {
-
+            // Rollback any db changes
             DB::rollback();
 
             // return a failure message
@@ -130,7 +131,7 @@ class Pipeline extends Model
     public function create()
     {
         try {
-
+            // Init transaction
             DB::beginTransaction();
 
             $this->save();
@@ -149,15 +150,13 @@ class Pipeline extends Model
             // return a success value
             return true;
 
-
+        // Catch any Exception
         } catch (Exception $e) {
-
+            // Rollback any db changes
             DB::rollback();
 
             // return a failure message
             return false;
         }
     }
-
-
 }

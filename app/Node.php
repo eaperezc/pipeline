@@ -22,6 +22,4 @@ class Node extends Model
     {
         return $this->belongsTo('App\Pipeline');
     }
-
-
 }

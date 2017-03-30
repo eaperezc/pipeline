@@ -1,0 +1,10 @@
+#|--------------------------------------------------------------------------
+#| Crontab setup file
+#|--------------------------------------------------------------------------
+#|
+#| This file will serve as the configuration file for all cron setup. 
+#| Laravel only requires one crontab line but if you need more you can
+#| use this file to add more scheduled runs.
+#|--------------------------------------------------------------------------
+
+#* * * * * php /home/vagrant/pipeline/artisan schedule:run >> /dev/null 2>&1

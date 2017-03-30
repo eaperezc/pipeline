@@ -9,7 +9,6 @@ use App\Pipeline;
 use App\Node;
 use App\Connection;
 
-
 class NodeController extends Controller
 {
 
