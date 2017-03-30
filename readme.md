@@ -18,7 +18,7 @@ I'm not the best TDD developer in the world but if you can please add some tests
 
 ## Credits
 
-- eaperezc@gmail.com... So far, just me
+- @eaperezc ... So far, just me
 
 ## License
 
