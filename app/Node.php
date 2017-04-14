@@ -22,4 +22,18 @@ class Node extends Model
     {
         return $this->belongsTo('App\Pipeline');
     }
+
+
+    /**
+     * Gets the nodes that will follow this node on
+     * the specific pipeline.
+     *
+     * @return Collection  A collection of all child nodes
+     */
+    public function nextNodes()
+    {
+        return Node::join('connections', 'connections.to_node_id', '=', 'nodes.id')
+                    ->where('connections.from_node_id', $this->id)
+                    ->get(['nodes.*']);
+    }
 }

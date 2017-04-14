@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Inspiring;
 
+use App\Message;
+
 /*
 |--------------------------------------------------------------------------
 | Console Routes
@@ -16,3 +18,23 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+
+
+
+
+// Remove this soon this is only for dev purposses to initialize a
+// message on the pipeline 1 (the one we seed on the migrations)
+Artisan::command('bulb:message', function () {
+
+    $msg = new Message([
+        'lifespan' => 3
+    ]);
+    $msg->save();
+
+    $pipeline_id = 1;
+    $this->comment('Running new message in pipeline ' . $pipeline_id);
+    $msg->runPipeline($pipeline_id);
+
+
+})->describe('[DEV] This starts a message on pipeline 1');

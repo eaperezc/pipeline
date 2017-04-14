@@ -19,8 +19,14 @@ class RunnerFactory
         $runner = null;
 
         switch ($type) {
+            case 'start':
+                $runner = new \App\Pipeline\Runner\Start;
+                break;
             case 'email':
                 $runner = new \App\Pipeline\Runner\Email;
+                break;
+            default:
+                throw new \Exception("Runner for node type {$type} is not available.");
                 break;
         }
         return $runner;

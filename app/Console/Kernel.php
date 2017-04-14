@@ -27,8 +27,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $processor = new Processor;
-            $processor->process();
+
+            try {
+                $processor = new Processor;
+                $processor->process();
+            } catch (Exception $e) {
+                $this->error($e->getMessage());
+            }
+
         })->everyMinute();
     }
 

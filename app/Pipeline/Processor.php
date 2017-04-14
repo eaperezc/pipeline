@@ -3,6 +3,7 @@
 namespace App\Pipeline;
 
 use App\Message;
+use App\MessageStep;
 use App\Node;
 
 /**
@@ -21,15 +22,31 @@ class Processor
      */
     public function process()
     {
-        // First we check if we need to run something
-        if ($this->prepare()) {
-            // get the runner and run it
-            $runner = $this->getNodeRunner();
-            $runner->run();
+        try {
 
-            // finishing touches
-            $this->finish();
+            // First we check if we need to run something
+            if ($this->prepare()) {
+                // get the runner and run it
+                $runner = $this->getNodeRunner();
+                $runner->run();
+
+                // finishing touches
+                $this->finish();
+            }
+
+        } catch(\Exception $e) {
+
+            // Here we will save the step as an error step
+            // and also throw the exception so the kernel
+            // takes care of showing it on the console
+            $this->step->status = 'ERROR';
+            $this->step->result = $e->getMessage();
+            $this->step->save();
+
+            throw $e;
+
         }
+
     }
 
     /**
@@ -41,17 +58,17 @@ class Processor
     private function prepare()
     {
         // Get a queued message
-        $this->message = Message::where('status', 'QUEUED')->first();
+        $this->step = MessageStep::where('status', 'QUEUED')->first();
 
         // No pending messages
-        if (!$this->message) {
+        if (!$this->step) {
             return false;
         }
-        $this->message->status = 'RUNNING';
-        $this->message->save();
+        $this->step->status = 'RUNNING';
+        $this->step->save();
 
         // get the node to execute
-        $this->node = Node::find($this->message->node_id);
+        $this->node = Node::find($this->step->node_id);
         return true;
     }
 
@@ -63,8 +80,12 @@ class Processor
      */
     private function finish()
     {
-        $this->message->status = 'COMPLETED';
-        $this->message->save();
+        $this->step->status = 'COMPLETED';
+        $this->step->save();
+
+        // Now that this step is done, we need to check if
+        // we have more nodes to run and queue them
+        $this->step->queueNextSteps();
     }
 
     /**
