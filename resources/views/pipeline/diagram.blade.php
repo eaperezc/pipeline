@@ -4,14 +4,14 @@
 
 <div id="pipeline-diagram-app" class="wrapper">
 
-    <div id="network-wrapper" class="col-xs-9">
+    <div id="network-wrapper" class="col-xs-8">
 
         <input id="pipeline-name" type="text" value="{{ $pipeline->name }}"></input>
         <div id="pipeline-diagram" style="height: 85vh"></div>
 
     </div>
 
-    <div class="col-xs-3">
+    <div class="col-xs-4">
 
         <div class="panel" style="background-color:transparent; box-shadow: none">
             <div class="panel-body" style="padding:0;">
