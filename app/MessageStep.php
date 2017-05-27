@@ -37,4 +37,9 @@ class MessageStep extends Model
 
     }
 
+    public function node()
+    {
+        return $this->belongsTo('App\Node');
+    }
+
 }

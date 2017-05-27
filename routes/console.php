@@ -28,13 +28,13 @@ Artisan::command('inspire', function () {
 Artisan::command('bulb:message', function () {
 
     $msg = new Message([
-        'lifespan' => 3
+        'lifespan' => 3,
+        'pipeline_id' => 1
     ]);
     $msg->save();
 
-    $pipeline_id = 1;
-    $this->comment('Running new message in pipeline ' . $pipeline_id);
-    $msg->runPipeline($pipeline_id);
+    $this->comment('Running new message in pipeline');
+    $msg->runPipeline();
 
 
 })->describe('[DEV] This starts a message on pipeline 1');

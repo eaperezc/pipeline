@@ -16,7 +16,7 @@
         <div class="panel" style="background-color:transparent; box-shadow: none">
             <div class="panel-body" style="padding:0;">
 
-                <div class="btn-group pull-right" data-toggle="buttons">
+                <div class="btn-group pull-right">
                     <label class="btn btn-default disabled">
                         Status:
                         @if ($pipeline->status)
@@ -28,9 +28,9 @@
                     <label class="btn btn-default">
                         <i class="fa fa-heart"></i>
                     </label>
-                    <label class="btn btn-default">
-                        <i class="fa fa-cog"></i>
-                    </label>
+                    <a class="btn btn-default" href="/pipeline/{{ $pipeline->id }}/messages">
+                        <i class="fa fa-envelope-open"></i>
+                    </a>
                     <label class="btn btn-default">
                         <i class="fa fa-power-off"></i> Turn Off
                     </label>

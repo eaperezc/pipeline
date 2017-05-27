@@ -17,6 +17,9 @@ class CreateMessagesTable extends Migration
 
             $table->increments('id');
 
+            $table->integer('pipeline_id')->unsigned();
+            $table->foreign('pipeline_id')->references('id')->on('pipelines');
+
             $table->integer('lifespan')->unsigned();
 
             $table->timestamps();

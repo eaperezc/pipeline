@@ -28,12 +28,14 @@ Route::get('/', function () {
 */
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get      ('/pipeline',                           'PipelineController@index');
-    Route::get      ('/pipeline/create',                    'PipelineController@store');
-    Route::get      ('/pipeline/{pipeline}',                'PipelineController@diagram');
-    Route::get      ('/pipeline/{pipeline}/structure',      'PipelineController@structure');
-    Route::post     ('/pipeline/{pipeline}/nodes',          'NodeController@store');
-    Route::delete   ('/pipeline/{pipeline}/nodes/{node}',   'NodeController@destroy');
+    Route::get      ('/pipeline',                               'PipelineController@index');
+    Route::get      ('/pipeline/create',                        'PipelineController@store');
+    Route::get      ('/pipeline/{pipeline}',                    'PipelineController@diagram');
+    Route::get      ('/pipeline/{pipeline}/structure',          'PipelineController@structure');
+    Route::post     ('/pipeline/{pipeline}/nodes',              'NodeController@store');
+    Route::delete   ('/pipeline/{pipeline}/nodes/{node}',       'NodeController@destroy');
+    Route::get      ('/pipeline/{pipeline}/messages',           'MessageController@index');
+    Route::get      ('/pipeline/{pipeline}/messages/{message}', 'MessageController@view');
 
 });
 

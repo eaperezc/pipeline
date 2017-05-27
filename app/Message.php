@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = [ 'lifespan' ];
+    protected $fillable = [ 'lifespan', 'pipeline_id' ];
 
     /**
      * This will start the pipeline flow for this message.
@@ -18,9 +18,9 @@ class Message extends Model
      * @param  int      $pipeline_id    The Pipeline id
      * @return void
      */
-    public function runPipeline($pipeline_id)
+    public function runPipeline()
     {
-        $pipeline = Pipeline::findOrFail($pipeline_id);
+        $pipeline = Pipeline::findOrFail($this->pipeline_id);
 
         // The first node of the pipeline is always the
         // start node (or it should always be)
@@ -35,6 +35,12 @@ class Message extends Model
         ]);
 
         $step->save();
+    }
+
+
+    public function steps()
+    {
+        return $this->hasMany('App\MessageStep');
     }
 
 }

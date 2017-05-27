@@ -159,4 +159,9 @@ class Pipeline extends Model
             return false;
         }
     }
+
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
+    }
 }
