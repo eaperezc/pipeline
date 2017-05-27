@@ -69,8 +69,9 @@
 @section('scripts')
 
 <script type="text/javascript">
-    var pipeline_id = '{{ $pipeline->id }}';
+var pipeline_id = '{{ $pipeline->id }}';
 
+$(document).ready(function(){
 
     $('.new-node-form').submit(function(e){
         e.preventDefault();
@@ -125,7 +126,35 @@
         $(this).addClass('selected').siblings().removeClass('selected');
     });
 
+    $('#pipeline-name').keypress(function(e) {
+        if(e.which == 13) {
+            console.log('enter');
+            $(this).blur();
+        }
+    });
+
+    $('#pipeline-name').blur(function(){
+        console.log('blur');
+        savePipelineName($(this).val());
+    });
+
+    // This block could be moved to the diagram js because is cleaner
+    // but for now is basically the one that saves the new name
+    var currentName = $('#pipeline-name').val();
+    function savePipelineName(name) {
+        if (name.length > 0 && name != currentName) {
+            $.post(
+                '/pipeline/{{ $pipeline->id }}/change_name',
+                { 'name': name, _token: Laravel.csrfToken }
+            ).done(function(){
+                currentName = name;
+            });
+        }
+    }
+
     $('.dropdown-toggle').dropdown();
+
+}); // end document ready
 
 </script>
 

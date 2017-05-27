@@ -2,8 +2,6 @@
 
 @section('content')
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-
 <div class="container">
 
     <h2 class="title">Welcome to your Dashboard</h2>
@@ -45,6 +43,8 @@
     </div>
 </div>
 
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 
 <script type="text/javascript">
 

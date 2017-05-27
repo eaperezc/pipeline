@@ -4,6 +4,9 @@
 
 <div class="container">
 
+    <h2 class="title">Available Pipelines</h2>
+    <hr>
+
     @if ($pipelines->count() > 0)
         <div class="well">
             <a href="/pipeline/create" class="btn btn-primary">Add a new Pipeline</a>

@@ -70,4 +70,25 @@ class PipelineController extends Controller
 
         return redirect('/pipeline/' . $pipeline->id);
     }
+
+    /**
+     * Changes the name of the pipeline. This is a request
+     * that is called when the user is changing the name on the
+     * diagram page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Pipeline     $pipeline   Pipeline object
+     * @return \Illuminate\Http\Response
+     */
+    public function changeName(Request $request, Pipeline $pipeline)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:100'
+        ]);
+
+        // Save the new name
+        $pipeline->name = $request->input('name');
+        $pipeline->save();
+        return [ 'success' => true ];
+    }
 }

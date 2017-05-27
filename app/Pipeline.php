@@ -160,6 +160,10 @@ class Pipeline extends Model
         }
     }
 
+    /**
+     * All the messages related to this pipeline
+     * @return Collection List of messages
+     */
     public function messages()
     {
         return $this->hasMany('App\Message');

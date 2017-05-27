@@ -9,6 +9,14 @@ use App\Message;
 
 class MessageController extends Controller
 {
+
+    /**
+     * This action displays the list of messages sent to
+     * this particular pipeline.
+     *
+     * @param  Pipeline     $pipeline   Pipeline object
+     * @return Renders the pipeline messages list
+     */
     public function index(Pipeline $pipeline)
     {
         return view('messages.index', [
@@ -17,8 +25,4 @@ class MessageController extends Controller
         ]);
     }
 
-    public function view(Pipeline $pipeline, Message $message)
-    {
-        # code...
-    }
 }
