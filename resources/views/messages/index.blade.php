@@ -4,40 +4,98 @@
 
 <div class="container">
 
+    <h2 class="title">
+        Pipeline <b>{{ $pipeline->name }}</b> messages
+        <div class="pull-right">
+            <a class="btn btn-link" href="/pipeline/{{ $pipeline->id }}"><i class="fa fa-angle-left"></i> Back To Diagram</a>
+        </div>
+    </h2>
+    <hr>
+
     @if ($messages->count() > 0)
-        <h2 class="title">
-            Pipeline {{ $pipeline->name }} messages
-            <div class="pull-right">
-                <a class="btn btn-primary" href="/pipeline/{{ $pipeline->id }}">Back To Pipeline Diagram</a>
-            </div>
-        </h2>
-        <hr>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <td>Id</td>
-                            <td>Created At</td>
-                        </tr>
-                    </thead>
+    <div class="row">
 
-                    <tbody>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">Messages</div>
+                <div class="panel-body">
 
-                        @foreach ($messages as $message)
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td width="50px">{{ $message->id }}</td>
-                                <td>{{ $message->created_at }}</td>
+                                <td>Id</td>
+                                <td>Created At</td>
                             </tr>
-                        @endforeach
+                        </thead>
 
-                    </tbody>
-                </table>
+                        <tbody>
 
-                {{ $messages->links() }}
+                            @foreach ($messages as $message)
+                                <tr>
+                                    <td width="50px">{{ $message->id }}</td>
+                                    <td><a href="#">{{ $message->created_at }}</a></td>
+                                </tr>
+                            @endforeach
 
+                        </tbody>
+                    </table>
+
+                    {{ $messages->links() }}
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">History</div>
+                <div class="panel-body">
+
+                    <table class="table">
+                        <tbody>
+
+                            <tr class="danger">
+                                <td style="width: 50px;text-align: center;">
+                                <i class="fa fa-times-circle text-danger"></i></td>
+                                <td>An error occured. Please review and retry node</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center;">
+                                <i class="fa fa-facebook-square"></i></td>
+                                <td>Something was Posted on facebook</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center;">
+                                <i class="fa fa-clock-o"></i></td>
+                                <td>Wait for 5 minutes</td>
+                            </tr>
+
+                            <tr class="warning">
+                                <td style="text-align: center;">
+                                <i class="fa fa-exclamation-triangle text-warning"></i></td>
+                                <td>The system retried the node. After trying again the result was the following: An email was sent. This is a big message to test how a long text looks on the grid</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center;">
+                                <i class="fa fa-envelope-o"></i></td>
+                                <td>An email was sent</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center;">
+                                <i class="fa fa-lightbulb-o"></i></td>
+                                <td>The message was sent to the pipeline</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     @else
